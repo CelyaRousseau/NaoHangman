@@ -1,11 +1,13 @@
 import naoGenius
 import hangmanGame
 import sys
+from drawn.DrawHangman import DrawHangman
 
 def main():
     nao  = naoGenius.naoGenius()
     word = nao.pickUpAword()
     game = hangmanGame.hangmanGame(word)
+    drawHangman = DrawHangman()
 
     while not (game.isWinner()) and not (game.isOver()):
         letter = raw_input("Donne moi une lettre : ")
@@ -16,10 +18,11 @@ def main():
             game.letterChecked.append(letter)
 
         else:
-            print "Cette Lettre n'est pas bonne ou a deja ete donnee"
+        	game.errors += 1
+        	drawHangman.drawn_hangman(game.errors)
+        	print "Cette Lettre n'est pas bonne ou a deja ete donnee"
 
         game.displayIncompleteWord()
-        game.turn += 1
 
     if game.isWinner() :
         print "Tu as gagne"

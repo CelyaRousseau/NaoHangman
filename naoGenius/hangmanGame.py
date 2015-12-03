@@ -1,15 +1,15 @@
 
 class hangmanGame:
-	HANGMAN_TURN_MAX = 10
+	HANGMAN_ERROR_MAX = 10
 
 	def __init__(self, word):
-		self.turn = 0
+		self.errors = 0
 		self.letterChecked = []
 		self.wordToFind = word
 		self.wordToComplete = ['_'] * len(self.wordToFind)
 
 	def isOver(self):
-		return self.turn == self.HANGMAN_TURN_MAX
+		return self.errors == self.HANGMAN_ERROR_MAX
 
 	def isWinner(self):
 		return self.wordToFind == ''.join(self.wordToComplete)
