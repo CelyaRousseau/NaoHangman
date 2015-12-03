@@ -27,7 +27,7 @@ def main():
     if game.isWinner() :
         print "Tu as gagne"
     else :
-        print "Tu es pendu"
+        print "Tu es pendu : le mot etait %s" %(word)
 
 if __name__ == "__main__":
     main()
