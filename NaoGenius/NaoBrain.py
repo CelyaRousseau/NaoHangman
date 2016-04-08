@@ -23,16 +23,23 @@ class NaoBrain():
 
 		self.dictionary[temp] = temp
 
-	def most_common_letters(self) :
-		i = int(0)
-		for word in self.dictionary :
+	def most_common_letters(self, array={}, excluded=[]) :
+		letters = {}
+		for word in array :
 			for letter in word.lower() :
-				if letter in self.letters :
-					self.letters[letter] += 1
+				if letter in excluded : 
+					continue
+				if letter in letters :
+					letters[letter] = letters[letter] + 1
 				else :
-					self.letters[letter] = 1		
-			i = i + 1
-			
+					letters[letter] = 1
+
+		from collections import OrderedDict
+		from operator import itemgetter
+		letters = OrderedDict(sorted(letters.items(), key=itemgetter(1), reverse=True))
+
+		return letters
+
 	def load_file(self, file) :
 		words = FileAccess.load_file(file)
 		i = int(0)
@@ -45,6 +52,16 @@ class NaoBrain():
 		for word in self.dictionary :
 			file_content += word + "\n"
 		FileAccess.save_file(file_content)
+
+	def matching_words(self, word) :
+		import re;
+		match = re.compile('^' + word + '$')
+		matches = []
+		for word in self.dictionary :
+			if match.match(word) :
+				matches.append(word)
+
+		return matches
 
 	def _get_dictionary(self) :
 		return self._dictionary
