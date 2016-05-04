@@ -7,9 +7,9 @@ class HangmanGame :
 	HANGMAN_ERROR_MAX = 10
 
 	def __init__(self, genius=None, novice=None):
-		if (genius == None or not isinstance(genius, GeniusPlayer)):
+		if genius == None or not isinstance(genius, GeniusPlayer):
 			raise ValueError("Genius must be a genius player!")
-		if (novice == None or not isinstance(novice, NovicePlayer)):
+		if novice == None or not isinstance(novice, NovicePlayer):
 			raise ValueError("Novice must be a novice player!")
 
 		self._genius = genius
@@ -34,21 +34,19 @@ class HangmanGame :
 	def run(self):
 		while not self.is_winner() and not self.is_over():
 			letter = self.novice.get_letter(self).lower()
-			#print("Lettre donnee : " + letter)
-			if letter in self.word_to_find and letter not in self.letters_checked:
-			#	print("Cette lettre appartient bien au mot")
+			# print("Lettre donnée " + str(letter))
+			if letter not in self.letters_checked:
 				self.nominate_letter(letter)
-			else:
-			#	print("Cette lettre n'est pas bonne ou a deja ete donnee")
-				self.errors += 1
-				#self.draw_hangman.drawn_hangman(self.errors)
+				if letter not in self.word_to_find :
+					self.errors += 1
+					#self.draw_hangman.drawn_hangman(self.errors)
 
 			#self.display_word()
 
 		if self.is_winner() :
-			print("Tu as gagne")
+			self.novice.game_won(self)
 		else :
-			print("Tu es pendu : le mot etait {0}".format(self.word_to_find))
+			self.novice.game_lost(self)
 
 	def is_over(self) :
 		return self.errors == self.HANGMAN_ERROR_MAX
@@ -63,7 +61,6 @@ class HangmanGame :
 		
 			for index in indexes:
 				self.word_to_complete[index] = letter
-
 
 	def display_word(self):
 		for letter in self.word_to_complete :

@@ -4,9 +4,6 @@ import io
 import unicodedata
 
 class FileAccess():
-	"""
-	FileAccess class.
-	"""
 
 	@staticmethod
 	def load_file(file) :
@@ -24,6 +21,12 @@ class FileAccess():
 
 	@staticmethod
 	def save_file(file, text) :
+		with open(file, "w+") as file_stream :
+			file_stream.write(text)
+			file_stream.close()
+
+	@staticmethod
+	def append_line(file, text) :
 		with open(file, "a+") as file_stream :
-			fileLog.write(text)
-			fileLog.close()
+			file_stream.write(text + "\n")
+			file_stream.close()

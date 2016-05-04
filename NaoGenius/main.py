@@ -13,7 +13,7 @@ def main():
 
 	game = HangmanGame(genius, novice)
 
-	while (True):
+	while True :
 		game.launch()
 
 if __name__ == "__main__":

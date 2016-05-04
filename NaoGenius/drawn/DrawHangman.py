@@ -34,36 +34,58 @@ class DrawHangman :
 				return False
 			self.increase_iteration_component()
 			return True
+
 	# Draw a socle
+	@classmethod
 	def drawn_socle(self) :
 		return "Drawn socle"
+		
 	# Draw a timber
+	@classmethod
 	def drawn_timber(self) :
 		return "Drawn timber"
+
 	#Draw a support
+	@classmethod
 	def drawn_support(self) :
 		return "Drawn support"
+
 	#Draw a rope support
+	@classmethod
 	def drawn_rope_support(self) :
 		return "Drawn rope support"
+
 	# Draw head of man
+	@classmethod
 	def drawn_head(self) :
 		return "Drawn head"
+
 	# Draw body of man
+	@classmethod
 	def drawn_body(self) :
 		return "Drawn body"
+
 	# Draw left hand of man
+	@classmethod
 	def drawn_left_hand(self) :
 		return "Drawn left hand"
-	# Draw right hand of man 
+
+	# Draw right hand of man
+	@classmethod 
 	def drawn_right_hand(self) :
 		return "Drawn right hand"
+
 	# Draw left foot of man
+	@classmethod
 	def drawn_left_foot(self) :
 		return "Drawn left foot"
+
 	# Draw right foot of man
+	@classmethod
 	def drawn_right_foot(self) :
 		return "Drawn right foot"
+
 	# Increase iteration of errors
+	@classmethod
 	def increase_iteration_component(self) :
 		self.current_component += 1

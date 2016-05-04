@@ -5,6 +5,7 @@ import random
 from NovicePlayer import NovicePlayer
 
 class HumanNovice(NovicePlayer):
+
 	def get_letter(self, game):
 		if sys.version_info[0] > 2 :
 			letter = input("Veuillez saisir une lettre :")

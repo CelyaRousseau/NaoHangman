@@ -10,7 +10,7 @@ class ArtificialGenius(GeniusPlayer):
 	def __init__(self):
 		self._brain = NaoBrain()
 		self._brain.load_file("resources/dictionary.txt")
-		
+	
 	def pick_up_a_word(self):
 		if sys.version_info[0] > 2 :
 			return random.choice(list(self.brain.dictionary.keys()))
