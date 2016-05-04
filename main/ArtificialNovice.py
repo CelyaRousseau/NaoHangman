@@ -42,8 +42,7 @@ class ArtificialNovice(NovicePlayer):
 
 				# Récupération des lettres les plus présentes dans les mots trouvés
 				self.letters = self.brain.most_common_letters(matching_words, list(checked)).keys()
-			else:
-				# Ne devrait jamais arriver, mais ne sait on jamais... pourquoi pas ajouter un logger?
+			
 			if len(self.letters) == 0 :
 				self.letters = self.brain.most_common_letters(self.brain.dictionary, list(checked)).keys()
 			if len(self.letters) != 0 :
