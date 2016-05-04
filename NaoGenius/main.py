@@ -17,4 +17,9 @@ def main():
 		game.launch()
 
 if __name__ == "__main__":
+	version = (2,7)
+	if sys.version_info < version :
+    	print("Python >= {0}.{1} is required to launch this program".format(version[0], version[1]))
+    	sys.exit(1)
+
 	main()
