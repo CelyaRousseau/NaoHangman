@@ -4,6 +4,8 @@ from __future__ import division
 from GeniusPlayer import GeniusPlayer
 from NovicePlayer import NovicePlayer
 
+from naoqi import ALProxy
+tts = ALProxy("ALTextToSpeech", "127.0.0.1", 9559)
 
 class HangmanGame:
     HANGMAN_ERROR_MAX = 10
@@ -71,14 +73,19 @@ class HangmanGame:
     def giveItsOpinion(self, value):
         if value > 0.5:
             print("Je suis sur que vous allez gagner : " + str(value))
+            tts.say("Je suis sur que vous allez gagner : " + str(value))
         elif value > 0.05:
             print("Vous allez gagner : " + str(value))
+            tts.say("Vous allez gagner : " + str(value))
         elif value < -0.5:
             print("Je suis sur que vous allez perdre : " + str(value))
+            tts.say("Je suis sur que vous allez perdre : " + str(value))
         elif value < -0.05:
             print("Vous allez perdre : " + str(value))
+            tts.say("Vous allez perdre : " + str(value))
         else:
             print("Je ne suis pas sur : " + str(value))
+            tts.say("Je ne suis pas sur : " + str(value))
 
     def make_sample(self, ds, winner):
         if winner:
