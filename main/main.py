@@ -6,7 +6,6 @@ from pybrain.structure import SigmoidLayer
 from pybrain.supervised.trainers import BackpropTrainer
 from pybrain.tools.customxml import NetworkWriter, NetworkReader
 from pybrain.datasets import SupervisedDataSet
-
 from pybrain.tools.shortcuts import buildNetwork
 
 from ArtificialNovice import ArtificialNovice
@@ -20,11 +19,12 @@ def main():
     genius = ArtificialGenius()
     game = HangmanGame(genius, novice)
 
+
     if __debug__:
         print "------------------- EVALUATION ------------------------"
-        network = NetworkReader.readFrom('../perceptron/network_weight1.xml')
+        network = NetworkReader.readFrom('../IA/network_weight_1000.xml')
         j = 0
-        while j < 10:
+        while j < 1:
             game.launch(False, None, network)
             j += 1
 
@@ -45,7 +45,7 @@ def main():
         trainer.train()
         print("---  END trainer in % seconds ---" % (time.time() - start_time_trainer))
         print " START EXPORT network : "
-        NetworkWriter.writeToFile(network, '../perceptron/network_weight2.xml')
+        NetworkWriter.writeToFile(network, '../IA/network_weight_test_learning.xml')
         print " END EXPORT network : "
 
 

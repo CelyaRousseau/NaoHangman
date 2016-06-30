@@ -53,6 +53,7 @@ class ArtificialNovice(NovicePlayer):
     def game_won(self, game):
         if __debug__:
             print("Félicitations! Vous avez gagné la partie.")
+        self.brain.add_word(game.word_to_find, False)
 
     def game_lost(self, game):
         if __debug__:

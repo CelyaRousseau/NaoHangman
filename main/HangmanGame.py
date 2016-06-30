@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
 
+from tkinter import *
+
 from GeniusPlayer import GeniusPlayer
 from NovicePlayer import NovicePlayer
 
-from naoqi import ALProxy
-tts = ALProxy("ALTextToSpeech", "127.0.0.1", 9559)
 
 class HangmanGame:
     HANGMAN_ERROR_MAX = 10
@@ -15,31 +15,50 @@ class HangmanGame:
             raise ValueError("Novice must be a novice player!")
         if genius == None or not isinstance(genius, GeniusPlayer):
             raise ValueError("Genius must be a genius player!")
-
+        self.text_label = 'init'
         self._genius = genius
         self._novice = novice
         self._errors = 0
         self._letters_checked = []
         self._word_to_find = ""
+        self.already_display = False
         self._word_to_complete = ""
         self._draw_hangman = None
         self._learningList = [[], []]
+        self.fenetre = Tk()
+        self.fenetre.geometry("500x900")
+        self.flag = False
+        scrollbar = Scrollbar(self.fenetre)
+        scrollbar.pack(side = RIGHT, fill = Y)
 
     def launch(self, learning = False, ds = None, network = None):
         self.init()
-        self.run(learning, ds, network)
+        self.learning = learning
+        self.ds = ds
+        self.network = network
+        # self.fenetre.after(1000, self.runFenetre)
+        self.runFenetre()
+        # self.fenetre.mainloop()
+
+    def runFenetre(self):
+        self.run(self.learning, self.ds, self.network)
 
     def init(self):
         self.errors = 0
         self._letters_checked = []
         self._word_to_find = self._genius.pick_up_a_word()
         self._word_to_complete = ['_'] * len(self._word_to_find)
+        self.label = Label(self.fenetre, text = str("Mot a trouver : " + self.word_to_find))
+        self.label.pack()
+
         # self._draw_hangman = DrawHangman()
 
     def run(self, learning, ds, network):
         letters_found = 0
+        opinion = 0
+        color = 'black'
         word_to_find_len = len(self._word_to_find)
-        while not self.is_winner() and not self.is_over():
+        if not self.is_winner() and not self.is_over():
             letter = self._novice.get_letter(self).lower()
             # print("Lettre donnée " + str(letter))
             if letter not in self._letters_checked:
@@ -60,32 +79,56 @@ class HangmanGame:
                 self._learningList[1].append((letters_found / word_to_find_len) - (self.errors / 10))
             else:
                 think = network.activate((word_to_find_len, letters_found, self.errors))
-                self.giveItsOpinion(think)
-
-        if self.is_winner():
-            self._novice.game_won(self)
+                opinion = self.give_its_Opinion(think)
+            label = Label(self.fenetre, text = self._word_to_complete, font = "-weight bold", fg = 'blue')
+            label.pack()
+            if opinion == 0:
+                color = 'red'
+            if opinion == 1:
+                color = 'green'
+            label = Label(self.fenetre, text = str("Avis de NAO : " + self.text_label), fg = color)
+            label.pack()
+            # self.fenetre.after(100, self.runFenetre)
+            self.runFenetre()
         else:
-            self._novice.game_lost(self)
 
-        if learning:
-            self.make_sample(ds, int(self.is_winner()))
+            if self.is_winner():
+                self._novice.game_won(self)
+                self.text_end = "Vous avez gagné la partie"
+            else:
+                self._novice.game_lost(self)
+                self.text_end = "Vous avez perdu la partie"
+            if not self.already_display:
+                label = Label(self.fenetre, text = self.text_end)
+                label.pack()
+                self.already_display = True
+            if learning:
+                self.make_sample(ds, int(self.is_winner()))
 
-    def giveItsOpinion(self, value):
-        if value > 0.5:
+    def refresh_label(self):
+        self.label.configure(text = self.text_label)
+
+    def give_its_Opinion(self, value):
+        val_ret = 0
+        if value > 0.7:
             print("Je suis sur que vous allez gagner : " + str(value))
-            tts.say("Je suis sur que vous allez gagner : " + str(value))
-        elif value > 0.05:
+            self.text_label = "Je suis sur que      vous allez gagner"
+            val_ret = 1
+        elif value > -0.3:
             print("Vous allez gagner : " + str(value))
-            tts.say("Vous allez gagner : " + str(value))
-        elif value < -0.5:
+            self.text_label = "Vous allez gagner"
+            val_ret = 1
+        elif value < -0.8:
             print("Je suis sur que vous allez perdre : " + str(value))
-            tts.say("Je suis sur que vous allez perdre : " + str(value))
-        elif value < -0.05:
+            self.text_label = "Je suis sur que vous allez perdre"
+        elif value < -0.6:
             print("Vous allez perdre : " + str(value))
-            tts.say("Vous allez perdre : " + str(value))
+            self.text_label = "Vous allez perdre"
         else:
             print("Je ne suis pas sur : " + str(value))
-            tts.say("Je ne suis pas sur : " + str(value))
+            self.text_label = "Je ne suis pas sur"
+            val_ret = 2
+        return val_ret
 
     def make_sample(self, ds, winner):
         if winner:
